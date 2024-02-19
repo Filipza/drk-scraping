@@ -73,7 +73,8 @@ func getEntries(page playwright.Page) {
 		if err != nil {
 			log.Fatalf("could not get href: %v", err)
 		}
-		getUrlCoordinates(mapUrl)
+		coords := getUrlCoordinates(mapUrl)
+		fmt.Println(coords)
 
 		textContent, err := v.InnerText()
 		if err != nil {
@@ -92,7 +93,6 @@ func getUrlCoordinates(mapUrl string) pgtype.Point {
 	queryParams := u.Query()
 	coordString := queryParams.Get("q")
 	coordArr := strings.Split(coordString, ",")
-	var point pgtype.Point
 	x, err := strconv.ParseFloat(coordArr[0], 64)
 	if err != nil {
 		log.Fatalf("could not parse float to point.P.X: %v", err)
@@ -101,7 +101,7 @@ func getUrlCoordinates(mapUrl string) pgtype.Point {
 	if err != nil {
 		log.Fatalf("could not parse float to point.P.X: %v", err)
 	}
-	point = pgtype.Point{
+	point := pgtype.Point{
 		P:     pgtype.Vec2{X: x, Y: y},
 		Valid: true,
 	}
